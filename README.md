@@ -7,5 +7,6 @@ npm install -g bower
 
 ```sh
 npm install
+bower install
 grunt serve --environment=vanilla
 ```
