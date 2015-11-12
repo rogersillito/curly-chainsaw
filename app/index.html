@@ -1,0 +1,27 @@
+<!doctype html>
+<html class="no-js" ng-app="MyApp" lnb-user-agent>
+  <head>
+    <title>My App</title>
+    <meta charset="utf-8" />
+    <!-- build:css assets/styles/vendor.css -->
+    <link rel="stylesheet" href="bower_components/animate.css/animate.css" />
+    <!-- endbuild -->
+    <!-- build:css({.tmp,app}) assets/styles/main.css -->
+    <link rel="stylesheet" href="assets/styles/style.css" />
+    <!-- endbuild -->
+  </head>
+  <body>
+    <ui-view></ui-view>
+    <!-- build:vendorjs scripts/vendor.js -->
+    <script src="bower_components/angular/angular.min.js" defer></script>
+    <script src="bower_components/angular-resource/angular-resource.min.js" defer></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js" defer></script>
+    <!-- endbuild -->
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="app.js" defer></script>
+    <script src="helloWorld/helloWorld1.js" defer></script>
+    <script src="helloWorld/helloWorld2.js" defer></script>
+    <script src="helloWorld/helloWorld3.js" defer></script>
+    <!-- endbuild -->
+  </body>
+</html>

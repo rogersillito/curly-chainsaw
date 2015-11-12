@@ -1,0 +1,8 @@
+.DS_Store
+.tmp
+app/bower_components
+dist
+environment.json
+node_modules
+todo.txt
+lib

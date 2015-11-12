@@ -1,0 +1,25 @@
+td {
+  background-color: #E0C020;
+  width: 16px;
+  height: 16px;
+}
+td.alive {
+  background-color: #4040C0;
+}
+
+.grid {
+  height: 200px;
+  width: 200px;
+  position: relative;
+  border-style: solid;
+  border-color: blue;
+}
+.cell {
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  background-color: #E0C020;
+}
+.alive {
+  background-color: #4040C0;
+}

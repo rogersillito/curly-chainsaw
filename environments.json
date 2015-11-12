@@ -1,0 +1,10 @@
+{
+  "vanilla": {
+    "proxies": [{
+      "context": "/gameOfLife",
+      "host": "localhost",
+      "port": 5000,
+      "changeOrigin": true
+    }]
+  }
+}
