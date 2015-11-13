@@ -14,9 +14,9 @@ angular.module('MyApp')
   })
   .factory('players', function ($resource) {
     'use strict';
-    return $resource('/assets/data/player/:player_id.json');
+    return $resource('/assets/data/player/:id.json');
   })
-  .controller('HelloWorld3Controller', ['$scope', 'leaderboard', 'players', '$timeout', '$filter', function ($scope, leaderboard, players, $timeout, $filter) {
+    .controller('HelloWorld3Controller', ['$scope', '$q', 'leaderboard', 'players', '$timeout', '$filter', function ($scope, $q, leaderboard, players, $timeout, $filter) {
     'use strict';
     $scope.loading = true;
     $timeout(function() { 
@@ -24,9 +24,9 @@ angular.module('MyApp')
         .then(function (leaderboard) {
             var player_promises = [];
             leaderboard.forEach(function(entry) {
-                player_promises.push(players.get({player_id: entry.id}).$promise);
+                player_promises.push(players.get(entry).$promise);
             });
-            Promise.all(player_promises)
+            $q.all(player_promises)
             .then(function (players) {
                 // $scope.leaderboard = [];
                 leaderboard.forEach(function(entry, idx) {

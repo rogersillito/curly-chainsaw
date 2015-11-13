@@ -19,8 +19,8 @@ describe('Deferred', function () {
     deferred.resolve('Result');
     $rootScope.$digest();
 
-    expect(successCallback).toHaveBeenCalledWith(__);
-    expect(failureCallback).toHaveBeenCalledWith(__);
+    expect(successCallback).toHaveBeenCalledWith('Result');
+    expect(failureCallback).not.toHaveBeenCalled();
   });
   it('should invoke success callback even if already resolved before callback was registered', function () {
     deferred.resolve('Result');
@@ -28,8 +28,8 @@ describe('Deferred', function () {
     deferred.promise.then(successCallback, failureCallback);
     $rootScope.$digest();
 
-    expect(successCallback).toHaveBeenCalledWith(__);
-    expect(failureCallback).toHaveBeenCalledWith(__);
+      expect(successCallback).toHaveBeenCalledWith('Result');
+      expect(failureCallback).not.toHaveBeenCalled();
   });
   it('should invoke failure callback when rejected', function () {
     deferred.promise.then(successCallback, failureCallback);
@@ -37,8 +37,8 @@ describe('Deferred', function () {
     deferred.reject('Reason');
     $rootScope.$digest();
 
-    expect(successCallback).toHaveBeenCalledWith(__);
-    expect(failureCallback).toHaveBeenCalledWith(__);
+      expect(failureCallback).toHaveBeenCalledWith('Reason');
+    expect(successCallback).not.toHaveBeenCalled();
   });
   it('should invoke failure callback even if already rejected before callback was registered', function () {
     deferred.promise.then(successCallback, failureCallback);
@@ -46,26 +46,26 @@ describe('Deferred', function () {
     deferred.reject('Reason');
     $rootScope.$digest();
 
-    expect(successCallback).toHaveBeenCalledWith(__);
-    expect(failureCallback).toHaveBeenCalledWith(__);
+      expect(failureCallback).toHaveBeenCalledWith('Reason');
+      expect(successCallback).not.toHaveBeenCalled();
   });
   it('should invoke finally callback when resolved', function () {
     deferred.promise.finally(finallyCallback);
     deferred.resolve('Reason');
     $rootScope.$digest();
 
-    expect(successCallback).toHaveBeenCalledWith(__);
-    expect(failureCallback).toHaveBeenCalledWith(__);
-    expect(finallyCallback).toHaveBeenCalledWith(__);
+      expect(successCallback).not.toHaveBeenCalled();
+      expect(failureCallback).not.toHaveBeenCalled();
+      expect(finallyCallback).toHaveBeenCalledWith();
   });
   it('should invoke finally callback when rejected', function () {
     deferred.promise.finally(finallyCallback);
     deferred.reject('Reason');
     $rootScope.$digest();
 
-    expect(successCallback).toHaveBeenCalledWith(__);
-    expect(failureCallback).toHaveBeenCalledWith(__);
-    expect(finallyCallback).toHaveBeenCalledWith(__);
+      expect(successCallback).not.toHaveBeenCalled();
+      expect(failureCallback).not.toHaveBeenCalled();
+      expect(finallyCallback).toHaveBeenCalledWith();
   });
 });
 describe('Chaining promises', function () {
@@ -92,16 +92,16 @@ describe('Chaining promises', function () {
     successAsyncAction('Result').then(successCallback, failureCallback);
     $rootScope.$digest();
 
-    expect(successCallback).toHaveBeenCalledWith(__);
-    expect(failureCallback).toHaveBeenCalledWith(__);
+    expect(successCallback).toHaveBeenCalledWith('Result');
+    expect(failureCallback).not.toHaveBeenCalled();
   });
 
   it('should understand $q.reject', function () {
     failAsyncAction('Reason').then(successCallback, failureCallback);
     $rootScope.$digest();
 
-    expect(successCallback).toHaveBeenCalledWith(__);
-    expect(failureCallback).toHaveBeenCalledWith(__);
+      expect(failureCallback).toHaveBeenCalledWith('Reason');
+      expect(successCallback).not.toHaveBeenCalled();
   });
 
   it('should understand chaining 1', function () {
@@ -112,8 +112,8 @@ describe('Chaining promises', function () {
       .then(successCallback, failureCallback);
     $rootScope.$digest();
 
-    expect(successCallback).toHaveBeenCalledWith(__);
-    expect(failureCallback).toHaveBeenCalledWith(__);
+      expect(successCallback).toHaveBeenCalledWith('Result Little extra');
+      expect(failureCallback).not.toHaveBeenCalled();
   });
 
   it('should understand chaining 2', function () {
@@ -124,8 +124,8 @@ describe('Chaining promises', function () {
       .then(successCallback, failureCallback);
     $rootScope.$digest();
 
-    expect(successCallback).toHaveBeenCalledWith(__);
-    expect(failureCallback).toHaveBeenCalledWith(__);
+      expect(successCallback).toHaveBeenCalledWith('Result Little more');
+      expect(failureCallback).not.toHaveBeenCalled();
   });
 
   it('should understand chaining 3', function () {
@@ -136,28 +136,71 @@ describe('Chaining promises', function () {
       .then(successCallback, failureCallback);
     $rootScope.$digest();
 
-    expect(successCallback).toHaveBeenCalledWith(__);
-    expect(failureCallback).toHaveBeenCalledWith(__);
+      expect(failureCallback).toHaveBeenCalledWith('Result Little more');
+      expect(successCallback).not.toHaveBeenCalled();
   });
+    it('should understand chaining 4', function () {
+        failAsyncAction('Reason')
+            .then(angular.noop, function () {
+            })
+            .then(successCallback, failureCallback);
+        $rootScope.$digest();
 
-  it('should understand chaining 4', function () {
+        expect(successCallback).toHaveBeenCalledWith(undefined);
+        expect(failureCallback).not.toHaveBeenCalled();
+    }); 
+  it('should understand chaining 4.1', function () {
     failAsyncAction('Reason')
-      .then(angular.noop, function () {
-      })
-      .then(successCallback, failureCallback);
-    $rootScope.$digest();
+          .then(angular.noop, function () {
+              return undefined;
+          })
+          .then(successCallback, failureCallback);
+      $rootScope.$digest();
 
-    expect(successCallback).toHaveBeenCalledWith(__);
-    expect(failureCallback).toHaveBeenCalledWith(__);
+      expect(failureCallback).not.toHaveBeenCalled();
+      expect(successCallback).toHaveBeenCalledWith(undefined);
   });
+    it('should understand chaining 4.2', function () {
+        failAsyncAction('Reason')
+            .then(angular.noop, function () {
+                return 'Result';
+            })
+            .then(successCallback, failureCallback);
+        $rootScope.$digest();
 
+        expect(successCallback).toHaveBeenCalledWith('Result');
+        expect(failureCallback).not.toHaveBeenCalled();
+    });
+    it('should understand chaining 4.3', function () {
+        failAsyncAction('Reason')
+            .then(angular.noop, function () {
+                return $q.reject('Another reason');
+            })
+            .then(successCallback, failureCallback);
+        $rootScope.$digest();
+
+        // 
+        expect(failureCallback).toHaveBeenCalledWith('Another reason');
+        expect(successCallback).not.toHaveBeenCalled();
+    });
+    it('should understand chaining 4.4', function () {
+        failAsyncAction('Reason')
+            .then(function() {})
+            .then(angular.noop)
+            .then(successCallback, failureCallback);
+        $rootScope.$digest();
+
+        // not providing a reject handler causes the failure to drop through to the last handler
+        expect(failureCallback).toHaveBeenCalledWith('Reason');
+        expect(successCallback).not.toHaveBeenCalled();
+    });
   it('should understand $q.all 1', function () {
     $q.all([successAsyncAction('Result 1'), successAsyncAction('Result 2'), successAsyncAction('Result 3')])
       .then(successCallback, failureCallback);
     $rootScope.$digest();
 
-    expect(successCallback).toHaveBeenCalledWith(__);
-    expect(failureCallback).toHaveBeenCalledWith(__);
+      expect(successCallback).toHaveBeenCalledWith(['Result 1', 'Result 2', 'Result 3']);
+    expect(failureCallback).not.toHaveBeenCalledWith();
   });
 
   it('should understand $q.all 2', function () {
@@ -165,8 +208,8 @@ describe('Chaining promises', function () {
       .then(successCallback, failureCallback);
     $rootScope.$digest();
 
-    expect(successCallback).toHaveBeenCalledWith(__);
-    expect(failureCallback).toHaveBeenCalledWith(__);
+    expect(successCallback).not.toHaveBeenCalledWith();
+    expect(failureCallback).toHaveBeenCalledWith('Reason 2');
   });
 
   it('should understand $q.all 3', function () {
@@ -177,7 +220,7 @@ describe('Chaining promises', function () {
       .then(successCallback, failureCallback);
     $rootScope.$digest();
 
-    expect(successCallback).toHaveBeenCalledWith(__);
-    expect(failureCallback).toHaveBeenCalledWith(__);
+    expect(successCallback).toHaveBeenCalledWith(3);
+    expect(failureCallback).not.toHaveBeenCalled();
   });
 });
