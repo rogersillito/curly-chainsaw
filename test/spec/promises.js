@@ -1,7 +1,7 @@
 var __ = 'Fill me in, delete me, or inverse the matcher';
 describe('Deferred', function () {
   'use strict';
-  var $rootScope, deferred, successCallback, failureCallback, finallyCallback;
+  var $rootScope, deferred, successCallback, failureCallback, finallyCallback, sleep;
   beforeEach(module('MyApp'));
 
   beforeEach(function () {
@@ -11,6 +11,14 @@ describe('Deferred', function () {
     inject(function ($q, _$rootScope_) {
       $rootScope = _$rootScope_;
       deferred = $q.defer();
+      sleep = function (millis, withWhat) {
+        var deferred = $q.defer();
+        // setTimeout(deferred.resolve.bind(deferred, withWhat), millis);
+        setTimeout(function () {
+          deferred.resolve(withWhat);
+        }, millis);
+        return deferred.promise;
+      };
     });
   });
   it('should invoke success callback when resolved', function () {
