@@ -44,6 +44,9 @@ angular.module('MyApp')
                     $scope.leaderboard = l;
                     $scope.loading = false;
                 });
+                $scope.toggleLeaderboard = function () {
+                    $scope.showLeaderboard = !$scope.showLeaderboard;
+                };
             }
         };
     });

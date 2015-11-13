@@ -1,4 +1,8 @@
-<strong ng-show="loading">Get ready for something fantastic....</strong>
-<div>
-	<div ng-repeat="l in leaderboard">{{l.id}}: {{l.name}}</div>
+<input type="button" ng-click="toggleLeaderboard()" value="{{showLeaderboard ? 'hide it' : 'show it'}}" style="margin: 10px; padding: 15px; border-radius: 30px; background-color: fuchsia" />
+<div ng-show="showLeaderboard">
+ 
+    <strong ng-show="loading">Get ready for something fantastic....</strong>
+    <div>
+    <div ng-repeat="l in leaderboard">{{l.id}}: {{l.name}}</div>
+    </div>
 </div>
