@@ -20,20 +20,22 @@ angular.module('MyApp')
     'use strict';
     $scope.loading = true;
     $timeout(function() { 
-        var player_promises = [];
         leaderboard.query().$promise
         .then(function (leaderboard) {
+            var player_promises = [];
             leaderboard.forEach(function(entry) {
                 player_promises.push(players.get({player_id: entry.id}).$promise);
             });
             Promise.all(player_promises)
             .then(function (players) {
-                $scope.leaderboard = [];
+                // $scope.leaderboard = [];
                 leaderboard.forEach(function(entry, idx) {
                     entry.name = $filter('filter')(players, {id: entry.id})[0].name;
-                    $scope.leaderboard.push(entry);
+                    // $scope.leaderboard.push(entry);
                     console.log(entry);
                 });
+                console.log(leaderboard);
+                $scope.leaderboard = leaderboard;
                 $scope.loading = false;
             });
         });
