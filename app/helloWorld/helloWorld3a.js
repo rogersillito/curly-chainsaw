@@ -4,7 +4,7 @@ angular.module('MyApp')
     $stateProvider
       .state('helloWorld3a', {
         url: '/helloWorld3a',
-          template: '<leaderboard></leaderboard>'
+          template: '<div toggle toggleid="leaderboard1" >xxx</div><leaderboard toggleable toggleableid="leaderboard1" toggle-class="hide"></leaderboard>'
       });
   }])
     .service('leaderboardService', function ($resource, $q, $filter) {
@@ -49,4 +49,45 @@ angular.module('MyApp')
                 };
             }
         };
-    });
+    })
+	.directive('toggle', function ($rootScope) {
+    'use strict';
+    return {
+      scope: {
+        toggleid: '@toggleid',
+        //something: '=nuSomething',
+        //action: '&nuAction'
+      },
+      link: function (scope, element) {
+        //$rootScope.$on('nuToggleClassClicked', window.console.log.bind(window.console));
+		element.on('click', function () {
+			console.log('clicked', scope.toggleid);
+          //scope.action();
+          //element.toggleClass(scope.className);
+		  //debugger;
+          $rootScope.$emit('toggling', scope.toggleid);
+        });
+      }
+    };
+  })
+  .directive('toggleable', function ($rootScope) {
+    'use strict';
+    return {
+      scope: {
+        toggleid: '@toggleableid',
+        toggleclass: '@toggleClass',
+        //action: '&nuAction'
+      },
+      link: function (scope, element) {
+        $rootScope.$on('toggling', function(e,args){
+									console.log('heard event',args); 
+									if(scope.toggleid === args)
+									{
+										console.log('toggling now',scope.toggleclass);
+										element.toggleClass(scope.toggleclass);
+									}
+									} );
+		}
+      }
+    }
+  );
